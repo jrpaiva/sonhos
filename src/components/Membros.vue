@@ -1,7 +1,7 @@
 <template>
   <v-card max-width="450" class="mx-auto">
     <v-toolbar color="cyan" dark dense class="d-flex justify-center">
-      <v-toolbar-title class="pr-4">Mix</v-toolbar-title>
+      <v-toolbar-title class="pr-4">Membros</v-toolbar-title>
 
       <v-row class="pr-15" justify="center">
         <v-dialog v-model="dialog" persistent max-width="400px">
@@ -118,7 +118,7 @@ export default {
     },
     buscarMembro() {
       return this.membros.filter(
-        (membro) => membro.name.toLowerCase().indexOf(this.pesquisar) > -1
+        (membro) => membro.name.toLowerCase().indexOf(this.pesquisar.toLowerCase()) > -1
       );
     },
     addMembro() {
