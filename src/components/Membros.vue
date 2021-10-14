@@ -103,6 +103,18 @@ export default {
   },
   methods: {
     listarMembro(){
+    excluirMembro(index){
+        api
+        .delete("/members/"+index)
+        .then((response) => {
+          console.log(response);
+          this.listarMembro();
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+      
+    },
       api
       .get("members", {
         params: {
