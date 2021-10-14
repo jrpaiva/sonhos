@@ -75,6 +75,15 @@
               `Email: ${membro.email}`
             }}</v-list-item-subtitle>
           </v-list-item-content>
+          <v-btn
+            @click="excluirMembro(membro._id)" 
+            class="mx-2" 
+            fab 
+            dark 
+            small 
+            color="red">
+            <v-icon dark> mdi-minus </v-icon>
+          </v-btn>
         </v-list-item>
       </template>
     </v-list>
