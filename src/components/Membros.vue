@@ -1,5 +1,5 @@
 <template>
-  <v-card max-width="450" class="mx-auto">
+  <v-card max-width="450" class="mx-auto" :loading="loading">
     <v-toolbar color="cyan" dark dense class="d-flex justify-center">
       <v-toolbar-title class="pr-4">Membros</v-toolbar-title>
 
@@ -67,7 +67,7 @@
       ></v-text-field>
     </v-toolbar>
 
-    <v-list two-line>
+    <v-list two-line> 
       <template v-for="(membro, index) in buscarMembro()">
         <v-divider :key="index" :inset="true"></v-divider>
 
@@ -94,6 +94,17 @@
         </v-list-item>
       </template>
     </v-list>
+   
+      <v-progress-linear
+            slot="progress"
+            color="deep-purple accent-4"
+            indeterminate
+            rounded
+            height="6"
+          ></v-progress-linear>
+      
+    
+    
   </v-card>
 </template>
 
@@ -105,6 +116,7 @@ export default {
 
   data() {
     return {
+      loading: true,
       nome: "",
       email: "",
       pass: "",
@@ -119,6 +131,7 @@ export default {
   },
   methods: {
     excluirMembro(index){
+        this.loading = true;
         api
         .delete("/members/"+index)
         .then((response) => {
@@ -141,6 +154,7 @@ export default {
         .then((resposta) => {
           console.log(resposta.data.result);
           this.membros = resposta.data.result;
+          this.loading = false;
         });
     },
     buscarMembro() {
@@ -150,6 +164,7 @@ export default {
       );
     },
     addMembro() {
+      this.loading = true;
       api
         .post("/members", {
           name: this.nome,
