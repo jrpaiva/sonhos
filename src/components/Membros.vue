@@ -19,14 +19,22 @@
               <v-container>
                 <v-row>
                   <v-col cols="12" sm="7" md="9">
-                    <v-text-field v-model="nome" label="Nome*" required></v-text-field>
+                    <v-text-field
+                      v-model="nome"
+                      label="Nome*"
+                      required
+                    ></v-text-field>
                   </v-col>
 
                   <v-col cols="12">
-                    <v-text-field v-model="email" label="Email*" required></v-text-field>
+                    <v-text-field
+                      v-model="email"
+                      label="Email*"
+                      required
+                    ></v-text-field>
                   </v-col>
                   <v-col cols="12">
-                    <v-text-field 
+                    <v-text-field
                       v-model="pass"
                       label="Password*"
                       type="password"
@@ -65,8 +73,7 @@
 
         <v-list-item :key="membro.name">
           <v-list-item-avatar size="50">
-            <v-icon>fas fa-search</v-icon>
-            <v-img src="../assets/account.svg"></v-img>
+            <v-icon x-large> mdi-account </v-icon>
           </v-list-item-avatar>
 
           <v-list-item-content>
@@ -98,9 +105,9 @@ export default {
 
   data() {
     return {
-      nome: '',
-      email: '',
-      pass: '',
+      nome: "",
+      email: "",
+      pass: "",
       dialog: false,
       membros: [],
       pesquisar: "",
@@ -111,7 +118,6 @@ export default {
     this.listarMembro();
   },
   methods: {
-    listarMembro(){
     excluirMembro(index){
         api
         .delete("/members/"+index)
@@ -124,22 +130,23 @@ export default {
         });
       
     },
+    listarMembro() {
       api
-      .get("members", {
-        params: {
-          //   seed: "abc",
-          //   page: 1,
-         
-        },
-      })
-      .then((resposta) => {
-        console.log(resposta.data.result);
-        this.membros = resposta.data.result;
-      });
+        .get("members", {
+          params: {
+            //   seed: "abc",
+            //   page: 1,
+          },
+        })
+        .then((resposta) => {
+          console.log(resposta.data.result);
+          this.membros = resposta.data.result;
+        });
     },
     buscarMembro() {
       return this.membros.filter(
-        (membro) => membro.name.toLowerCase().indexOf(this.pesquisar.toLowerCase()) > -1
+        (membro) =>
+          membro.name.toLowerCase().indexOf(this.pesquisar.toLowerCase()) > -1
       );
     },
     addMembro() {
@@ -156,9 +163,7 @@ export default {
         .catch(function (error) {
           console.log(error);
         });
-       this.dialog = false
-       
-        
+      this.dialog = false;
     },
   },
 };
@@ -166,7 +171,6 @@ export default {
 
 <style>
 .pes {
-  
   width: 200px;
 }
 </style>
