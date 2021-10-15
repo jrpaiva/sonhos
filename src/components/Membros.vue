@@ -1,5 +1,5 @@
 <template>
-  <v-card max-width="450" class="mx-auto" :loading="loading">
+  <v-card max-width="450" class="mx-auto">
     <v-toolbar color="cyan" dark dense class="d-flex justify-center">
       <v-toolbar-title class="pr-4">Membros</v-toolbar-title>
 
@@ -11,30 +11,41 @@
             </v-btn>
           </template>
           <v-card>
-            <v-toolbar class="d-flex justify-space-between" color="cyan" dark
-              >Adicionar Membro</v-toolbar
+            <v-toolbar class="d-flex justify-center" color="cyan" dark dense
+              ><h3>Adicionar Membro</h3></v-toolbar
             >
 
             <v-card-text>
               <v-container>
+                <v-snackbar
+                  v-model="error"
+                  timeout="1000"
+                  color="red"
+                  min-width="100"
+                  absolute
+                  bottom
+                  rounded="pill"
+                >
+                  Preencha os campos!
+                </v-snackbar>
                 <v-row>
-                  <v-col cols="12" sm="7" md="9">
+                  <v-col cols="12" sm="7" md="12">
                     <v-text-field
+                      prepend-icon="mdi-account"
                       v-model="nome"
                       label="Nome*"
                       required
                     ></v-text-field>
-                  </v-col>
 
-                  <v-col cols="12">
                     <v-text-field
+                      prepend-icon="mdi-email"
                       v-model="email"
                       label="Email*"
                       required
                     ></v-text-field>
-                  </v-col>
-                  <v-col cols="12">
+
                     <v-text-field
+                      prepend-icon="mdi-key"
                       v-model="pass"
                       label="Password*"
                       type="password"
@@ -46,10 +57,10 @@
             </v-card-text>
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn color="blue darken-1" text @click="dialog = false">
+              <v-btn color="red darken-1" text @click="dialog = false">
                 Close
               </v-btn>
-              <v-btn color="blue darken-1" text @click="addMembro()">
+              <v-btn color="green darken-1" text @click="addMembro()">
                 Save
               </v-btn>
             </v-card-actions>
@@ -67,7 +78,7 @@
       ></v-text-field>
     </v-toolbar>
 
-    <v-list two-line> 
+    <v-list two-line>
       <template v-for="(membro, index) in buscarMembro()">
         <v-divider :key="index" :inset="true"></v-divider>
 
@@ -83,28 +94,38 @@
             }}</v-list-item-subtitle>
           </v-list-item-content>
           <v-btn
-            @click="excluirMembro(membro._id)" 
-            class="mx-2" 
-            fab 
-            dark 
-            small 
-            color="red">
+            @click="excluirMembro(membro._id)"
+            class="mx-2"
+            fab
+            dark
+            small
+            color="red"
+          >
             <v-icon dark> mdi-minus </v-icon>
           </v-btn>
         </v-list-item>
       </template>
     </v-list>
-   
-      <v-progress-linear
-            slot="progress"
-            color="deep-purple accent-4"
-            indeterminate
-            rounded
-            height="6"
-          ></v-progress-linear>
-      
-    
-    
+
+    <v-progress-linear
+      v-if="loading"
+      color="deep-purple accent-4"
+      indeterminate
+      rounded
+      height="6"
+    ></v-progress-linear>
+
+    <v-snackbar
+      v-model="snackbar"
+      timeout="2000"
+      color="success"
+      min-width="100"
+      absolute
+      centered
+      rounded="pill"
+    >
+      Adicionado com sucesso!
+    </v-snackbar>
   </v-card>
 </template>
 
@@ -116,6 +137,8 @@ export default {
 
   data() {
     return {
+      error: false,
+      snackbar: false,
       loading: true,
       nome: "",
       email: "",
@@ -130,10 +153,10 @@ export default {
     this.listarMembro();
   },
   methods: {
-    excluirMembro(index){
-        this.loading = true;
-        api
-        .delete("/members/"+index)
+    excluirMembro(index) {
+      this.loading = true;
+      api
+        .delete("/members/" + index)
         .then((response) => {
           console.log(response);
           this.listarMembro();
@@ -141,7 +164,6 @@ export default {
         .catch((error) => {
           console.log(error);
         });
-      
     },
     listarMembro() {
       api
@@ -164,6 +186,15 @@ export default {
       );
     },
     addMembro() {
+      if (
+        this.nome.trim() === "" ||
+        this.email.trim() === "" ||
+        this.pass.trim() === ""
+      ) {
+        this.error = true;
+        return;
+      }
+
       this.loading = true;
       api
         .post("/members", {
@@ -174,11 +205,16 @@ export default {
         .then((response) => {
           console.log(response);
           this.listarMembro();
+          this.dialog = false;
+          this.snackbar = true;
+
+          this.nome = "";
+          this.email = "";
+          this.pass = "";
         })
         .catch(function (error) {
           console.log(error);
         });
-      this.dialog = false;
     },
   },
 };
